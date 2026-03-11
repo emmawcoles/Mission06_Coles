@@ -21,10 +21,18 @@ namespace Mission06_Coles.Controllers
             _context = context;
         }
 
-        // GET: Movies
-        public async Task<IActionResult> Index()
+        // GET: Movies added search functionality to filter movies by title
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Movies.ToListAsync());
+            var movies = from m in _context.Movies
+                         select m;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(s => s.Title.Contains(searchString));
+            }
+
+            return View(await movies.ToListAsync());
         }
 
         // GET: Movies/Details/5
